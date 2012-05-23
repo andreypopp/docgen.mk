@@ -1,0 +1,16 @@
+#!/usr/bin/env python
+"""usage: render-jinja2 [options] template
+
+render jinja2 template
+
+    -h, --help              show this message and exit
+
+"""
+
+from docopt import docopt
+
+def main():
+    opts, args = docopt(__doc__)
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,3 @@
+# docgen -- document generator
+
+docgen consist of set of utilities and a library of GNU Make macros.
