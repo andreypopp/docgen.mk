@@ -20,8 +20,10 @@ BUILDALL      := $(BUILDALL) $(MD_BUILD)
 all: $(BUILDALL)
 
 clean:
-	rm -rf $(BUILD)
+	$(info removing $(BUILD))
+	@rm -rf $(BUILD)
 
 $(BUILD)/%.html: $(SRC)/%.md
-	mkdir -p $(dir $@)
-	$(call MD_RENDER,$<,$@)
+	$(info processing $<)
+	@mkdir -p $(dir $@)
+	@$(call MD_RENDER,$<,$@)
