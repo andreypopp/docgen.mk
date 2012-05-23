@@ -1,7 +1,7 @@
-SRC				:= src
-BUILD			:= build
-IGNORE		:= templates/%
-DEPS			:= $(BUILD)/rss.xml
+SRC       := src
+BUILD     := build
+IGNORE    := templates/%
+DEPS      := $(BUILD)/rss.xml
 
 $(BUILD)/rss.xml:
 	$(call prelude)
