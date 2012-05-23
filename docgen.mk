@@ -27,8 +27,7 @@ BUILDALL      := $(BUILDALL) $(MD_BUILD)
 SRCPROCESSED  := $(SRCPROCESSED) $(MD_SRC)
 
 $(BUILD)/%.html: $(SRC)/%.md
-	$(call status)
-	@mkdir -p $(dir $@)
+	$(call prelude)
 	@$(BINPATH)dg-markdown $< > $@
 
 # docgen.core
