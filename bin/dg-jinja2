@@ -12,16 +12,12 @@ from sys import stdin, stderr, exit
 from docopt import docopt
 from jinja2 import Environment, FileSystemLoader
 
-def main():
-    opts, args = docopt(__doc__)
-    if not args:
-        print >> stderr, "provide template as argument"
-        exit(1)
-    filename = args[0]
-    templates = Environment(loader=FileSystemLoader(dirname(filename)))
-    template = templates.get_template(basename(filename))
-    buf = "".join(iter(stdin.readline, "")).strip()
-    print template.render(body=buf)
-
-if __name__ == "__main__":
-    main()
+opts, args = docopt(__doc__)
+if not args:
+    print >> stderr, "provide template as argument"
+    exit(1)
+filename = args[0]
+templates = Environment(loader=FileSystemLoader(dirname(filename)))
+template = templates.get_template(basename(filename))
+buf = "".join(iter(stdin.readline, "")).strip()
+print template.render(body=buf)
