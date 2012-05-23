@@ -2,13 +2,16 @@
 
 .PHONY: all
 
-SRC           = src
-BUILD         = build
-IGNORE        = .% %.mk Makefile bin/%
+IGNORE        := .% %.mk Makefile bin/% $(IGNORE)
 IGNORE_IMPL   = $(patsubst %,$(SRC)/%,$(IGNORE))
 SRCALL        = $(filter-out $(IGNORE_IMPL),$(shell find $(SRC) -type f))
 SRCPROCESSED  =
-BUILDALL      =
+BUILDALL      := $(DEPS)
+
+status        = $(info generating $@)
+ensuredir     = @mkdir -p $(dir $@)
+prelude       = $(call status)\
+								$(call ensuredir)
 
 # docgen.markdown
 
@@ -20,7 +23,7 @@ BUILDALL      := $(BUILDALL) $(MD_BUILD)
 SRCPROCESSED  := $(SRCPROCESSED) $(MD_SRC)
 
 $(BUILD)/%.html: $(SRC)/%.md
-	$(info processing $<)
+	$(call status)
 	@mkdir -p $(dir $@)
 	@$(call MD_RENDER,$<,$@)
 
@@ -33,10 +36,10 @@ BUILDALL      := \
 all: $(BUILDALL)
 
 clean:
-	$(info removing $(BUILD))
+	$(info cleaning up)
 	@rm -rf $(BUILD)
 
 $(BUILD)/%: $(SRC)/%
-	$(info processing $<)
+	$(call status)
 	@mkdir -p $(dir $@)
 	@cp $< $@
