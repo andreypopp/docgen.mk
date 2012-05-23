@@ -1,12 +1,13 @@
 # docgen.prelude
 
-.PHONY: all
+.PHONY: all build metadata clean
 
 IGNORE        := .% %.mk Makefile bin/% $(IGNORE)
 IGNORE_IMPL   = $(patsubst %,$(SRC)/%,$(IGNORE))
 SRCALL        = $(filter-out $(IGNORE_IMPL),$(shell find $(SRC) -type f))
 SRCPROCESSED  =
 BUILDALL      := $(DEPS)
+METADATA			= $(BUILD)/.docgen
 
 status        = $(info generating $@)
 ensuredir     = @mkdir -p $(dir $@)
@@ -27,17 +28,25 @@ $(BUILD)/%.html: $(SRC)/%.md
 	@mkdir -p $(dir $@)
 	@$(call MD_RENDER,$<,$@)
 
-# docgen.code
+# docgen.core
 
 BUILDALL      := \
 	$(BUILDALL) \
 	$(patsubst $(SRC)/%,$(BUILD)/%,$(filter-out $(SRCPROCESSED),$(SRCALL)))
 
-all: $(BUILDALL)
+build: $(BUILDALL)
 
 clean:
 	$(info cleaning up)
 	@rm -rf $(BUILD)
+
+metadata:
+	$(info processing metadata)
+	@mkdir -p $(METADATA)
+
+all:
+	@$(MAKE) metadata
+	@$(MAKE) build
 
 $(BUILD)/%: $(SRC)/%
 	$(call status)
