@@ -1,0 +1,20 @@
+#!/usr/bin/env python
+"""usage: dg-markdown [options] input 
+
+render markdown
+
+    -h, --help              show this message and exit
+
+"""
+
+from sys import stderr, exit
+from docopt import docopt
+import markdown
+
+opts, args = docopt(__doc__)
+if not args:
+    print >> stderr, "provide input file as argument"
+    exit(1)
+filename = args[0]
+md = markdown.Markdown()
+md.convertFile(args[0])

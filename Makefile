@@ -1,3 +1,4 @@
+BINPATH   := ./bin/
 SRC       := src
 BUILD     := build
 IGNORE    := templates/%
