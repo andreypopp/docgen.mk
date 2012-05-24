@@ -32,6 +32,10 @@ $(BUILD)/%.html: $(SRC)/%.md
 
 # docgen.core
 
+all:
+	@$(MAKE) metadata
+	@$(MAKE) build
+
 BUILDALL      := \
 	$(BUILDALL) \
 	$(patsubst $(SRC)/%,$(BUILD)/%,$(filter-out $(SRCPROCESSED),$(SRCALL)))
@@ -45,10 +49,6 @@ clean:
 metadata:
 	$(info processing metadata)
 	@mkdir -p $(METADATA)
-
-all:
-	@$(MAKE) metadata
-	@$(MAKE) build
 
 $(BUILD)/%: $(SRC)/%
 	$(call status)
