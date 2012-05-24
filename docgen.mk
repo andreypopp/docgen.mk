@@ -15,8 +15,9 @@ METADATA      = $(BUILD)/.docgen
 
 status        = $(info generating $@)
 ensuredir     = @mkdir -p $(dir $@)
-prelude       = $(call status)\
-								$(call ensuredir)
+prelude       = \
+	$(call status)\
+	$(call ensuredir)
 
 # docgen.markdown
 
