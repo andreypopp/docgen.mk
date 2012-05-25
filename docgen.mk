@@ -7,7 +7,6 @@ BIN           ?=
 IGNORE        := .% %.mk Makefile bin/% $(IGNORE)
 SRCALL        = $(filter-out $(IGNORE:%=$(SRC)/%), $(shell find $(SRC) -type f))
 BUILDALL      := $(DEPS) $(SRCALL:$(SRC)/%=$(BUILD)/%)
-METADATA      = $(BUILD)/.docgen
 
 status        = $(info generating $@)
 ensuredir     = @mkdir -p $(dir $@)
@@ -25,17 +24,13 @@ $(BUILD)/%.html: $(SRC)/%.md
 
 # docgen.core
 
-all: | metadata build
+all: | build
 
 build: $(BUILDALL)
 
 clean:
 	$(info cleaning up)
 	@rm -rf $(BUILD)
-
-metadata:
-	$(info processing metadata)
-	@mkdir -p $(METADATA)
 
 $(BUILD)/%: $(SRC)/%
 	$(call prelude)
