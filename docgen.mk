@@ -1,7 +1,5 @@
 # docgen.prelude
 
-.PHONY: all build metadata clean
-
 SRC           ?= src
 BUILD         ?= build
 BIN           ?=
@@ -27,9 +25,7 @@ $(BUILD)/%.html: $(SRC)/%.md
 
 # docgen.core
 
-all:
-	@$(MAKE) metadata
-	@$(MAKE) build
+all: | metadata build
 
 build: $(BUILDALL)
 
