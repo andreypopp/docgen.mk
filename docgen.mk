@@ -6,7 +6,7 @@ BIN           ?=
 
 IGNORE        := .% %.mk Makefile bin/% $(IGNORE)
 SRCALL        = $(filter-out $(IGNORE:%=$(SRC)/%), $(shell find $(SRC) -type f))
-BUILDALL      := $(DEPS) $(SRCALL:$(SRC)/%=$(BUILD)/%)
+BUILDALL      := $(SRCALL:$(SRC)/%=$(BUILD)/%) $(DEPS)
 
 status        = $(info generating $@)
 ensuredir     = @mkdir -p $(dir $@)
