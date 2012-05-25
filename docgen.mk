@@ -4,13 +4,11 @@
 
 SRC           ?= src
 BUILD         ?= build
-BINPATH       ?=
+BIN           ?=
 
 IGNORE        := .% %.mk Makefile bin/% $(IGNORE)
-IGNORE_IMPL   = $(patsubst %,$(SRC)/%,$(IGNORE))
-SRCALL        = $(filter-out $(IGNORE_IMPL),$(shell find $(SRC) -type f))
-SRCPROCESSED  =
-BUILDALL      := $(DEPS)
+SRCALL        = $(filter-out $(IGNORE:%=$(SRC)/%), $(shell find $(SRC) -type f))
+BUILDALL      := $(DEPS) $(SRCALL:$(SRC)/%=$(BUILD)/%)
 METADATA      = $(BUILD)/.docgen
 
 status        = $(info generating $@)
@@ -21,25 +19,17 @@ prelude       = \
 
 # docgen.markdown
 
-MD_SRC        = $(filter %.md, $(SRCALL))
-MD_BUILD      = $(patsubst $(SRC)/%.md,$(BUILD)/%.html,$(MD_SRC))
-
-BUILDALL      := $(BUILDALL) $(MD_BUILD)
-SRCPROCESSED  := $(SRCPROCESSED) $(MD_SRC)
+BUILDALL      := $(BUILDALL:%.md=%.html)
 
 $(BUILD)/%.html: $(SRC)/%.md
 	$(call prelude)
-	@$(BINPATH)dg-markdown $< > $@
+	@$(BIN)dg-markdown $< > $@
 
 # docgen.core
 
 all:
 	@$(MAKE) metadata
 	@$(MAKE) build
-
-BUILDALL      := \
-	$(BUILDALL) \
-	$(patsubst $(SRC)/%,$(BUILD)/%,$(filter-out $(SRCPROCESSED),$(SRCALL)))
 
 build: $(BUILDALL)
 
@@ -52,6 +42,5 @@ metadata:
 	@mkdir -p $(METADATA)
 
 $(BUILD)/%: $(SRC)/%
-	$(call status)
-	@mkdir -p $(dir $@)
+	$(call prelude)
 	@cp $< $@
