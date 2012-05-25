@@ -22,8 +22,8 @@ if opts.metadata:
     flatten = lambda v: v[0] if len(v) == 1 else None if len(v) == 0 else v
     md = markdown.Markdown(extensions=["meta"])
     md.convertFile(args[0], "/dev/null")
-    md.Meta = {k: flatten(v) for k, v in md.Meta.items()}
-    print yaml.dump(md.Meta, default_flow_style=False)
+    print yaml.dump({k: flatten(v) for k, v in md.Meta.items()},
+        default_flow_style=False)
 else:
     md = markdown.Markdown()
     md.convertFile(args[0])
