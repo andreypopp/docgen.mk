@@ -20,7 +20,7 @@ BUILDALL      := $(BUILDALL:%.md=%.html)
 
 $(BUILD)/%.html: $(SRC)/%.md
 	$(call prelude)
-	@$(BIN)dg-markdown $< > $@
+	@$(BIN)markdown $< > $@
 
 # docgen.core
 
