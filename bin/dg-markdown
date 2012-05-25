@@ -4,6 +4,7 @@
 render markdown
 
     -h, --help              show this message and exit
+    -m, --metadata          extract metadata in YAML format
 
 """
 
@@ -16,5 +17,13 @@ if not args:
     print >> stderr, "provide input file as argument"
     exit(1)
 filename = args[0]
-md = markdown.Markdown()
-md.convertFile(args[0])
+if opts.metadata:
+    import yaml
+    flatten = lambda v: v[0] if len(v) == 1 else None if len(v) == 0 else v
+    md = markdown.Markdown(extensions=["meta"])
+    md.convertFile(args[0], "/dev/null")
+    md.Meta = {k: flatten(v) for k, v in md.Meta.items()}
+    print yaml.dump(md.Meta, default_flow_style=False)
+else:
+    md = markdown.Markdown()
+    md.convertFile(args[0])
