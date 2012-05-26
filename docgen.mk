@@ -67,6 +67,3 @@ clean:
 $(BUILD)/%: $(SRC)/%
 	$(call prelude)
 	@cp $< $@
-
-preview:
-	@(cd build; python -m SimpleHTTPServer)
