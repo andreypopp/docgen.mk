@@ -39,9 +39,10 @@ build: $(BUILDALL)
 
 $(METADATA): $(METAALL)
 	@$(info generating $(METADATA))
+	@$(call ensuredir)
 	@cat $(SETTINGS)  >> $(METADATA)
 	@echo "pages:"    >> $(METADATA)
-	@$(foreach f,$(METAALL),\
+	@$(foreach f,$(shell [ -d $(META) ] && find $(META) -type f),\
 		echo "$(f:$(META)/%=%):" | sed -E 's/^/  /'   >> $(METADATA);\
 		cat $(f)                 | sed -E 's/^/    /' >> $(METADATA);\
 		)
