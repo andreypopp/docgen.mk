@@ -2,7 +2,7 @@
 
 SRC           ?= src
 BUILD         ?= build
-BIN           ?=
+BIN           ?= bin
 
 IGNORE        := .% %.mk Makefile bin/% $(IGNORE)
 SRCALL        = $(filter-out $(IGNORE:%=$(SRC)/%), $(shell find $(SRC) -type f))
@@ -20,7 +20,7 @@ BUILDALL      := $(BUILDALL:%.md=%.html)
 
 $(BUILD)/%.html: $(SRC)/%.md
 	$(call prelude)
-	@$(BIN)markdown $< > $@
+	@$(BIN)/markdown $< > $@
 
 # docgen.core
 

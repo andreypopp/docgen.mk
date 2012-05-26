@@ -22,7 +22,6 @@ if opts.metadata:
     import yaml
     flatten = lambda v: v[0] if len(v) == 1 else None if len(v) == 0 else v
     md.convertFile(args[0], "/dev/null")
-    print yaml.dump({k: flatten(v) for k, v in md.Meta.items()},
-        default_flow_style=False)
+    print yaml.dump({k: flatten(v) for k, v in md.Meta.items()})
 else:
     md.convertFile(args[0])
