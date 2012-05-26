@@ -5,6 +5,6 @@ DEPS      := $(BUILD)/rss.xml
 
 include docgen.mk
 
-$(BUILD)/rss.xml:
+$(BUILD)/rss.xml: $(METADATA)
 	$(call prelude)
 	@$(BIN)/jinja2 -m $(METADATA) -p /rss.xml $(SRC)/templates/rss.xml > $@
