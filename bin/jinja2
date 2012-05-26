@@ -3,7 +3,10 @@
 
 render jinja2 template
 
-    -h, --help              show this message and exit
+    -h, --help                show this message and exit
+    -b, --body BODY           read body from file or from stdin if equals to -
+    -m, --metadata METADATA   metadata storage to use
+    -p, --page PAGENAME       page name of currently rendered page
 
 """
 
@@ -11,13 +14,23 @@ from os.path import dirname, basename
 from sys import stdin, stderr, exit
 from docopt import docopt
 from jinja2 import Environment, FileSystemLoader
+from yaml import load
 
 opts, args = docopt(__doc__)
 if not args:
     print >> stderr, "provide template as argument"
     exit(1)
-filename = args[0]
-templates = Environment(loader=FileSystemLoader(dirname(filename)))
-template = templates.get_template(basename(filename))
-buf = "".join(iter(stdin.readline, "")).strip()
-print template.render(body=buf)
+
+template = (Environment(loader=FileSystemLoader(dirname(args[0])))
+            .get_template(basename(args[0])))
+
+if opts.body and opts.body == "-":
+    body = "".join(iter(stdin.read, "")).strip()
+elif opts.body:
+    body = open(opts.body).read()
+else:
+    body = ""
+
+metadata = load(open(opts.metadata).read()) if opts.metadata else {}
+
+print template.render(body=body, metadata=metadata, page=opts.page)

@@ -7,4 +7,4 @@ include docgen.mk
 
 $(BUILD)/rss.xml:
 	$(call prelude)
-	@touch $@
+	@$(BIN)/jinja2 -m $(METADATA) -p /rss.xml $(SRC)/templates/rss.xml > $@
