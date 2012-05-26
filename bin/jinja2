@@ -3,10 +3,12 @@
 
 render jinja2 template
 
-    -h, --help                show this message and exit
-    -b, --body BODY           read body from file or from stdin if equals to -
-    -m, --metadata METADATA   metadata storage to use
-    -p, --page PAGENAME       page name of currently rendered page
+    -h, --help                    show this message and exit
+    -b, --body BODY               read body from file or from stdin
+                                  if equals to '-' then read from stdin
+    -m, --metadata METADATA       metadata storage to use
+    -p, --page PAGENAME           page name of currently rendered page
+    -t, --templates TEMPLATES     additional directory where to search templates
 
 """
 
@@ -21,8 +23,9 @@ if not args:
     print >> stderr, "provide template as argument"
     exit(1)
 
-template = (Environment(loader=FileSystemLoader(dirname(args[0])))
-            .get_template(basename(args[0])))
+loader = FileSystemLoader(
+    [dirname(args[0])] + ([opts.templates] if opts.templates else []))
+template = (Environment(loader=loader).get_template(basename(args[0])))
 
 if opts.body and opts.body == "-":
     body = "".join(iter(stdin.read, "")).strip()
@@ -33,4 +36,5 @@ else:
 
 metadata = load(open(opts.metadata).read()) if opts.metadata else {}
 
-print template.render(body=body, metadata=metadata, page=opts.page)
+print template.render(
+    body=body, metadata=metadata, page=opts.page).encode("utf8")

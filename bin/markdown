@@ -24,4 +24,4 @@ if opts.metadata:
     md.convertFile(args[0], "/dev/null")
     print yaml.dump({k: flatten(v) for k, v in getattr(md, "Meta", {}).items()})
 else:
-    md.convertFile(args[0])
+    print md.convert(open(args[0]).read().decode("utf-8")).encode("utf-8")
