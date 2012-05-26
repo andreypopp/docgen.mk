@@ -51,7 +51,8 @@ build: $(BUILDALL)
 $(METADATA): $(METAALL)
 	@$(info generating $(METADATA))
 	@$(call ensuredir)
-	@cat $(SETTINGS)  >> $(METADATA)
+	# TODO: find a way to supress warning
+	@-[ -f $(SETTINGS) ] && (cat $(SETTINGS) >> $(METADATA))
 	@echo "pages:"    >> $(METADATA)
 	@$(foreach f,$(shell [ -d $(META) ] && find $(META) -type f),\
 		echo "$(f:$(META)/%=%):" | sed -E 's/^/  /'   >> $(METADATA);\
