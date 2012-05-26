@@ -15,9 +15,11 @@ METAALL       :=
 status        = $(info generating $@)
 ensuredir     = @mkdir -p $(dir $@)
 prelude       = $(call status) $(call ensuredir)
+metaname      = $(@:$(BUILD)/%=$(META)/%)
 tplname       = $(TEMPLATE_$(<:$(SRC)/%=%))
-tpl           = $(if $(1),|$(BIN)/jinja2 -b - -m $(METADATA) $(1),)
-tplchoose     = $(if $(call tpl,$(1)),$(call tpl,$(1)),$(call tpl,$(2)))
+tpl           = $(if $(1),|$(BIN)/jinja2 -b - -m $(2) $(1),)
+tplchoose     = $(if $(call tpl,$(1),$(3)),\
+                $(call tpl,$(1),$(3)),$(call tpl,$(2),$(3)))
 
 # docgen.markdown
 
@@ -26,11 +28,13 @@ METAALL       := $(METAALL) $(SRCALL:$(SRC)/%.md=$(META)/%.html)
 
 $(BUILD)/%.html: $(SRC)/%.md
 	$(call prelude)
-	@$(BIN)/markdown $< $(call tplchoose,$(call tplname),$(TEMPLATE_md)) > $@
+	$(BIN)/markdown $< \
+		$(call tplchoose,$(call tplname),$(TEMPLATE_md),$(call metaname))\
+		> $@
 
 $(META)/%.html: $(SRC)/%.md
 	$(call prelude)
-	@$(BIN)/markdown --metadata $< > $@
+	$(BIN)/markdown --metadata $< > $@
 
 # docgen.jinja2
 
@@ -38,7 +42,7 @@ BUILDALL      := $(BUILDALL:%.jinja2=%)
 
 $(BUILD)/%: $(SRC)/%.jinja2
 	$(call prelude)
-	@$(BIN)/jinja2 --metadata $(METADATA) $< > $@
+	$(BIN)/jinja2 --metadata $(METADATA) $< > $@
 
 # docgen.core
 
@@ -46,24 +50,24 @@ all:
 	@$(MAKE) -s metadata
 	@$(MAKE) -s build
 
+clean:
+	$(info cleaning up)
+	@rm -rf $(BUILD)
+
 build: $(BUILDALL)
 
 $(METADATA): $(METAALL)
-	@$(info generating $(METADATA))
-	@$(call ensuredir)
-	@[ -f $(SETTINGS) ] && (cat $(SETTINGS) >> $(METADATA)); true
-	@echo "pages:"    >> $(METADATA)
-	@$(foreach f,$(shell [ -d $(META) ] && find $(META) -type f),\
+	$(info generating $(METADATA))
+	$(call ensuredir)
+	[ -f $(SETTINGS) ] && (cat $(SETTINGS) >> $(METADATA)); true
+	echo "pages:"    >> $(METADATA)
+	$(foreach f,$(shell [ -d $(META) ] && find $(META) -type f),\
 		echo "$(f:$(META)/%=%):" | sed -E 's/^/  /'   >> $(METADATA);\
 		cat $(f)                 | sed -E 's/^/    /' >> $(METADATA);\
 		)
 
 metadata: $(METADATA)
 
-clean:
-	$(info cleaning up)
-	@rm -rf $(BUILD)
-
 $(BUILD)/%: $(SRC)/%
 	$(call prelude)
-	@cp $< $@
+	cp $< $@
