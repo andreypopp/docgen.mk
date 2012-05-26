@@ -3,9 +3,12 @@
 SRC           ?= src
 BUILD         ?= build
 BIN           ?= bin
+TEMPLATES     ?= templates
 META          ?= $(BUILD)/.docgen
 METADATA      ?= $(META)/metadata.yaml
 SETTINGS      ?= settings.yaml
+HOST          ?= localhost
+PORT          ?= 8000
 
 IGNORE        := .% %.mk Makefile bin/% $(IGNORE)
 SRCALL        = $(filter-out $(IGNORE:%=$(SRC)/%), $(shell find $(SRC) -type f))
@@ -30,6 +33,14 @@ $(BUILD)/%.html: $(SRC)/%.md
 $(META)/%.html: $(SRC)/%.md
 	$(call prelude)
 	@$(BIN)/markdown --metadata $< > $@
+
+# docgen.jinja2
+
+BUILDALL      := $(BUILDALL:%.jinja2=%.html)
+
+$(BUILD)/%.html: $(SRC)/%.jinja2
+	$(call prelude)
+	@$(BIN)/jinja2 --metadata $(METADATA) --templates $(TEMPLATES) $< > $@
 
 # docgen.core
 
@@ -56,3 +67,12 @@ clean:
 $(BUILD)/%: $(SRC)/%
 	$(call prelude)
 	@cp $< $@
+
+preview:
+	$(info serving on $(HOST):$(PORT))
+	@(cd build; python -c '\
+import SimpleHTTPServer;\
+import SocketServer;\
+Handler = SimpleHTTPServer.SimpleHTTPRequestHandler;\
+httpd = SocketServer.TCPServer(("$(HOST)", $(PORT)), Handler);\
+httpd.serve_forever();')
