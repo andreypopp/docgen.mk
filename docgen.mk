@@ -17,7 +17,9 @@ ensuredir     = @mkdir -p $(dir $@)
 prelude       = \
 	$(call status)\
 	$(call ensuredir)
-template			= $(if $(1),|$(BIN)/jinja2 -b - -m $(METADATA) $(1),)
+tplname       = $(TEMPLATE_$(<:$(SRC)/%=%))
+tpl           = $(if $(1),|$(BIN)/jinja2 -b - -m $(METADATA) $(1),)
+tplchoose     = $(if $(call tpl,$(1)),$(call tpl,$(1)),$(call tpl,$(2)))
 
 # docgen.markdown
 
@@ -26,7 +28,7 @@ METAALL       := $(METAALL) $(SRCALL:$(SRC)/%.md=$(META)/%.html)
 
 $(BUILD)/%.html: $(SRC)/%.md
 	$(call prelude)
-	@$(BIN)/markdown $< $(call template,$(TEMPLATE_md)) > $@
+	@$(BIN)/markdown $< $(call tplchoose,$(call tplname),$(TEMPLATE_md)) > $@
 
 $(META)/%.html: $(SRC)/%.md
 	$(call prelude)
