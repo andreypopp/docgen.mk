@@ -37,4 +37,4 @@ else:
 metadata = load(open(opts.metadata).read()) if opts.metadata else {}
 
 print template.render(
-    body=body, metadata=metadata, page=opts.page).encode("utf8")
+    body=body.decode("utf8"), metadata=metadata, page=opts.page).encode("utf8")
