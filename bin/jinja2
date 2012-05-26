@@ -30,6 +30,6 @@ else:
     body = ""
 
 ctx = {}
-ctx.update(load(open(opts.metadata).read()) if opts.metadata else {})
+ctx.update((load(open(opts.metadata).read()) or {}) if opts.metadata else {})
 ctx.update({"body": body.decode("utf8")})
 print template.render(**ctx).encode("utf8")
