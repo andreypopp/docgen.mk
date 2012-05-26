@@ -14,9 +14,7 @@ METAALL       :=
 
 status        = $(info generating $@)
 ensuredir     = @mkdir -p $(dir $@)
-prelude       = \
-	$(call status)\
-	$(call ensuredir)
+prelude       = $(call status) $(call ensuredir)
 tplname       = $(TEMPLATE_$(<:$(SRC)/%=%))
 tpl           = $(if $(1),|$(BIN)/jinja2 -b - -m $(METADATA) $(1),)
 tplchoose     = $(if $(call tpl,$(1)),$(call tpl,$(1)),$(call tpl,$(2)))
