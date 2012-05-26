@@ -7,19 +7,17 @@ render jinja2 template
     -b, --body BODY               read body from file or from stdin
                                   if equals to '-' then read from stdin
     -m, --metadata METADATA       metadata storage to use
-    -p, --page PAGENAME           page name of currently rendered page
 
 """
 
-from sys import stdin, stderr, exit
+from sys import stdin, stderr
 from docopt import docopt
 from jinja2 import Environment, FileSystemLoader
 from yaml import load
 
 opts, args = docopt(__doc__)
 if not args:
-    print >> stderr, "provide template as argument"
-    exit(1)
+    exit("provide template as argument")
 
 template = (Environment(loader=FileSystemLoader("."))
             .get_template(args[0]))
@@ -31,7 +29,7 @@ elif opts.body:
 else:
     body = ""
 
-metadata = load(open(opts.metadata).read()) if opts.metadata else {}
-
-print template.render(
-    body=body.decode("utf8"), metadata=metadata, page=opts.page).encode("utf8")
+ctx = {}
+ctx.update(load(open(opts.metadata).read()) if opts.metadata else {})
+ctx.update({"body": body.decode("utf8")})
+print template.render(**ctx).encode("utf8")

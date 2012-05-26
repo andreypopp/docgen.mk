@@ -8,15 +8,13 @@ render markdown
 
 """
 
-from sys import stderr, exit
 from docopt import docopt
 import markdown
 
 opts, args = docopt(__doc__)
 if not args:
-    print >> stderr, "provide input file as argument"
-    exit(1)
-filename = args[0]
+    exit("provide input file as argument")
+
 md = markdown.Markdown(extensions=["meta"])
 if opts.metadata:
     import yaml
