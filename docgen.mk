@@ -34,9 +34,9 @@ $(META)/%.html: $(SRC)/%.md
 
 # docgen.jinja2
 
-BUILDALL      := $(BUILDALL:%.jinja2=%.html)
+BUILDALL      := $(BUILDALL:%.jinja2=%)
 
-$(BUILD)/%.html: $(SRC)/%.jinja2
+$(BUILD)/%: $(SRC)/%.jinja2
 	$(call prelude)
 	@$(BIN)/jinja2 --metadata $(METADATA) $< > $@
 
