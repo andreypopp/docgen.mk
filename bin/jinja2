@@ -8,11 +8,9 @@ render jinja2 template
                                   if equals to '-' then read from stdin
     -m, --metadata METADATA       metadata storage to use
     -p, --page PAGENAME           page name of currently rendered page
-    -t, --templates TEMPLATES     additional directory where to search templates
 
 """
 
-from os.path import dirname, basename
 from sys import stdin, stderr, exit
 from docopt import docopt
 from jinja2 import Environment, FileSystemLoader
@@ -23,9 +21,8 @@ if not args:
     print >> stderr, "provide template as argument"
     exit(1)
 
-loader = FileSystemLoader(
-    [dirname(args[0])] + ([opts.templates] if opts.templates else []))
-template = (Environment(loader=loader).get_template(basename(args[0])))
+template = (Environment(loader=FileSystemLoader("."))
+            .get_template(args[0]))
 
 if opts.body and opts.body == "-":
     body = "".join(iter(stdin.read, "")).strip()
