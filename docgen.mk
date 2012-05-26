@@ -42,7 +42,9 @@ $(BUILD)/%.html: $(SRC)/%.jinja2
 
 # docgen.core
 
-all: | metadata build
+all:
+	@$(MAKE) -s metadata
+	@$(MAKE) -s build
 
 build: $(BUILDALL)
 
