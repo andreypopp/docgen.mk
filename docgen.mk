@@ -20,6 +20,7 @@ ensuredir     = @mkdir -p $(dir $@)
 prelude       = \
 	$(call status)\
 	$(call ensuredir)
+template			= $(if $(1),|$(BIN)/jinja2 -b - -m $(METADATA) $(1),)
 
 # docgen.markdown
 
@@ -28,7 +29,7 @@ METAALL       := $(METAALL) $(SRCALL:$(SRC)/%.md=$(META)/%.html)
 
 $(BUILD)/%.html: $(SRC)/%.md
 	$(call prelude)
-	@$(BIN)/markdown $< > $@
+	@$(BIN)/markdown $< $(call template,$(TEMPLATE_md)) > $@
 
 $(META)/%.html: $(SRC)/%.md
 	$(call prelude)
@@ -72,8 +73,7 @@ $(BUILD)/%: $(SRC)/%
 preview:
 	$(info serving on $(HOST):$(PORT))
 	@(cd build; python -c '\
-import SimpleHTTPServer;\
-import SocketServer;\
-Handler = SimpleHTTPServer.SimpleHTTPRequestHandler;\
-httpd = SocketServer.TCPServer(("$(HOST)", $(PORT)), Handler);\
+import SimpleHTTPServer, SocketServer;\
+handler = SimpleHTTPServer.SimpleHTTPRequestHandler;\
+httpd = SocketServer.TCPServer(("$(HOST)", $(PORT)), handler);\
 httpd.serve_forever();')
