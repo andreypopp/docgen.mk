@@ -4,7 +4,7 @@ SRC           ?= src
 BUILD         ?= build
 BIN           ?= bin
 META          ?= $(BUILD)/.docgen
-METADATA      ?= $(META)/metadata.yaml
+METADATA      ?= $(BUILD)/.metadata.yaml
 SETTINGS      ?= settings.yaml
 
 IGNORE        := .% %.mk Makefile bin/% $(IGNORE)
