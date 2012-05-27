@@ -20,6 +20,7 @@ tplname       = $(TEMPLATE_$(<:$(SRC)/%=%))
 tpl           = $(if $(1),|$(BIN)/jinja2 -b - -m $(2) $(1),)
 tplchoose     = $(if $(call tpl,$(1),$(3)),\
                 $(call tpl,$(1),$(3)),$(call tpl,$(2),$(3)))
+tplordefault  = $(call tplchoose,$(call tplname),$(1),$(call metaname))
 
 # docgen.markdown
 
@@ -28,9 +29,7 @@ METAALL       := $(METAALL) $(SRCALL:$(SRC)/%.md=$(META)/%.html)
 
 $(BUILD)/%.html: $(SRC)/%.md
 	$(call prelude)
-	$(BIN)/markdown $< \
-		$(call tplchoose,$(call tplname),$(TEMPLATE_md),$(call metaname))\
-		> $@
+	$(BIN)/markdown $< $(call tplordefault,$(TEMPLATE_md)) > $@
 
 $(META)/%.html: $(SRC)/%.md
 	$(call prelude)

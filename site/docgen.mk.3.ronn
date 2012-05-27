@@ -1,0 +1,11 @@
+docgen.mk(3) -- a set of make macros for static site generation
+===============================================================
+
+## SYNOPSIS
+
+`include docgen.mk`
+
+## DESCRIPTION
+
+**docgen.mk** provides a set of macros for static site generation.
+
