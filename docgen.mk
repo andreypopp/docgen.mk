@@ -59,6 +59,7 @@ build: $(BUILDALL)
 $(METADATA): $(METAALL)
 	$(info generating $(METADATA))
 	$(call ensuredir)
+	> $(METADATA)
 	[ -f $(SETTINGS) ] && (cat $(SETTINGS) >> $(METADATA)); true
 	echo "pages:"    >> $(METADATA)
 	$(foreach f,$(shell [ -d $(META) ] && find $(META) -type f),\
