@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""usage: dg-markdown [options] input 
+"""usage: markdown [options] input
 
 render markdown
 
