@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""usage: jinja2 [options] template
+"""usage: jinja2 [options] TEMPLATE
 
 render jinja2 template
 
@@ -15,21 +15,19 @@ from docopt import docopt
 from jinja2 import Environment, FileSystemLoader
 from yaml import load
 
-opts, args = docopt(__doc__)
-if not args:
-    exit("provide template as argument")
+args = docopt(__doc__)
 
 template = (Environment(loader=FileSystemLoader("."))
-            .get_template(args[0]))
+            .get_template(args['TEMPLATE']))
 
-if opts.body and opts.body == "-":
+if args['--body'] and args['--body'] == "-":
     body = "".join(iter(stdin.read, "")).strip()
-elif opts.body:
-    body = open(opts.body).read()
+elif args['--body']:
+    body = open(args['--body']).read()
 else:
     body = ""
 
 ctx = {}
-ctx.update((load(open(opts.metadata).read()) or {}) if opts.metadata else {})
+ctx.update((load(open(args['--metadata']).read()) or {}) if args['--metadata'] else {})
 ctx.update({"body": body.decode("utf8")})
 print template.render(**ctx).encode("utf8")

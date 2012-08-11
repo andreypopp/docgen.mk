@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""usage: markdown [options] input
+"""usage: markdown [options] INPUT
 
 render markdown
 
@@ -11,15 +11,13 @@ render markdown
 from docopt import docopt
 import markdown
 
-opts, args = docopt(__doc__)
-if not args:
-    exit("provide input file as argument")
+args = docopt(__doc__)
 
 md = markdown.Markdown(extensions=["meta"])
-if opts.metadata:
+if args['--metadata']:
     import yaml
     flatten = lambda v: v[0] if len(v) == 1 else None if len(v) == 0 else v
-    md.convertFile(args[0], "/dev/null")
+    md.convertFile(args['INPUT'], "/dev/null")
     print yaml.dump({k: flatten(v) for k, v in getattr(md, "Meta", {}).items()})
 else:
-    print md.convert(open(args[0]).read().decode("utf-8")).encode("utf-8")
+    print md.convert(open(args['INPUT']).read().decode("utf-8")).encode("utf-8")
