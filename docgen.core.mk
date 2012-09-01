@@ -1,4 +1,3 @@
-
 all:
 	@$(MAKE) -s metadata
 	@$(MAKE) -s build

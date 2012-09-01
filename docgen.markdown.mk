@@ -1,4 +1,3 @@
-
 BUILDALL      := $(BUILDALL:%.md=%.html)
 METAALL       := $(METAALL) $(SRCALL:$(SRC)/%.md=$(META)/%.html)
 
