@@ -27,7 +27,7 @@ tplordefault  = $(call tplchoose,$(call tplname),$(1),$(call metaname))
 BUILDALL      := $(BUILDALL:%.md=%.html)
 METAALL       := $(METAALL) $(SRCALL:$(SRC)/%.md=$(META)/%.html)
 
-$(BUILD)/%.html: $(SRC)/%.md
+$(BUILD)/%.html: $(SRC)/%.md $(call tplordefault,$(TEMPLATE_md))
 	$(call prelude)
 	$(BIN)/markdown $< $(call tplordefault,$(TEMPLATE_md)) > $@
 
